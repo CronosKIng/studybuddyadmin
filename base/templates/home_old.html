@@ -1,0 +1,41 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<style>
+    .home-container {
+        display: grid;
+        grid-template-columns: 1fr 3fr 1fr; /* Safu tatu */
+    }
+</style>
+
+<div class="home-container">
+    <!-- Topics Section (Left Column) -->
+    <div class="topics">
+        {% include 'topic_component.html' %}
+    </div>
+
+    <!-- Rooms Section (Main Column) -->
+    <div class="rooms">
+        <!-- Search Form -->
+        <form method="GET" action="{% url 'home' %}">
+            <input type="text" name="q" placeholder="Search topics..." value="{{ query }}">
+            <button type="submit">Search</button>
+        </form>
+
+        <h5>{{ room_count }} rooms available</h5>
+        <a href="{% url 'create-room' %}">Create Room</a>
+        
+        {% include 'feed.component.html' %}
+
+        
+    </div>
+
+    <!-- Recent Activity Section (Right Column) -->
+    <div class="recent-activity">
+        {% include 'activity_component.html' %}
+    </div>
+</div>
+
+{% endblock %}
+
+

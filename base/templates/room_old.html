@@ -1,0 +1,65 @@
+{% extends 'main.html' %} <!-- Templeti ya msingi -->
+
+{% block content %}
+
+<style>
+    .room-container{
+        display: grid;
+        grid-template-columns: 3fr 1fr;
+    }
+
+
+</style>
+
+<div class="room-container">
+    <!-- Maelezo ya Room -->
+    <div>
+        <h1>{{ room.name }}</h1> <!-- Jina la room -->
+        <p>{{ room.description }}</p> <!-- Maelezo ya room -->
+
+        <!-- Ujumbe wa mazungumzo -->
+        <div class="comment-wrapper">
+            <h3>Conversation</h3>
+            <hr>
+            {% for message in room_messages %}
+            <div class="message">
+                {% if request.user == message.user %}
+                <a href="{% url 'delete_message' message.id %}">Delete</a>
+                {% endif %}
+                <small>@{{ message.user }} {{ message.created|timesince }} ago</small>
+                <hr>
+                <p>{{ message.body }}</p>
+            </div>
+            {% empty %}
+            <p>No messages yet. Be the first to start the conversation!</p>
+            {% endfor %}
+        </div>
+
+        <!-- Fomu ya kuongeza ujumbe (kwa watumiaji waliothibitishwa) -->
+        {% if request.user.is_authenticated %}
+        <div class="comment-form">
+            <form method="POST" action="">
+                {% csrf_token %}
+                <input type="text" name="body" placeholder="Write your message here..." required />
+                <button type="submit">Send</button>
+            </form>
+        </div>
+        {% else %}
+        <p>You need to <a href="{% url 'login' %}">log in</a> to join the conversation.</p>
+        {% endif %}
+    </div>
+
+    <!-- Orodha ya washiriki -->
+    <div>
+        <h3>Participants</h3>
+        <hr>
+        {% for user in participants %}
+        <div>
+            <p>@{{user.username}}</p>
+        </div>
+        {% endfor %}
+        
+    </div>
+</div>
+
+{% endblock %}
